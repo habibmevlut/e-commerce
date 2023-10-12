@@ -1,4 +1,4 @@
-# e-commorce11
+# e-commorce
 
 ## Project setup
 ```
