@@ -13,6 +13,96 @@ export default class Product extends Vue {
     @Inject('productService') private productService: () => ProductService;
     @Inject('alertService') private alertService: (() => AlertService);
     public products: IProduct[] = [];
+    selected: null
+
+    categories = [
+        {text: 'All', value: null},
+        {text: 'Electronics', value: 'electronics'},
+        {text: 'Clothing', value: 'clothing'},
+        {text: 'Shoes', value: 'shoes'},
+        {text: 'Jewelry', value: 'jewelry'},
+        {text: 'Toys', value: 'toys'},
+        {text: 'Sports', value: 'sports'},
+        {text: 'Outdoors', value: 'outdoors'},
+        {text: 'Beauty', value: 'beauty'},
+    ]
+
+
+    currentPage = 1;
+    cardsData = [
+        {
+            title: "Card Title 1",
+            text: "Some quick example",
+            button: "Go somewhere",
+            image: "https://picsum.photos/200/100/?random",
+        },
+        {
+            title: "Card Title 1",
+            text: "Some quick example",
+            button: "Go somewhere",
+            image: "https://picsum.photos/200/100/?random",
+        },
+        {
+            title: "Card Title 1",
+            text: "Some quick example",
+            button: "Go somewhere",
+            image: "https://picsum.photos/200/100/?random",
+        },
+        {
+            title: "Card Title 1",
+            text: "Some quick example",
+            button: "Go somewhere",
+            image: "https://picsum.photos/200/100/?random",
+        },
+        {
+            title: "Card Title 1",
+            text: "Some quick example",
+            button: "Go somewhere",
+            image: "https://picsum.photos/200/100/?random",
+        },
+        {
+            title: "Card Title 1",
+            text: "Some quick example",
+            button: "Go somewhere",
+            image: "https://picsum.photos/200/100/?random",
+        },
+        {
+            title: "Card Title 2",
+            text: "Some quick example",
+            button: "Go somewhere",
+            image: "https://picsum.photos/200/100/?random",
+        },
+        {
+            title: "Card Title 3",
+            text: "Some quick example",
+            button: "Go somewhere",
+            image: "https://picsum.photos/200/100/?random",
+        },
+        {
+            title: "Card Title 4",
+            text: "Some quick example",
+            button: "Go somewhere",
+            image: "https://picsum.photos/200/100/?random",
+        },
+        {
+            title: "Card Title 5",
+            text: "Some quick example",
+            button: "Go somewhere",
+            image: "https://picsum.photos/200/100/?random",
+        },
+        {
+            title: "Card Title 5",
+            text: "Some quick example",
+            button: "Go somewhere",
+            image: "https://picsum.photos/200/100/?random",
+        },
+        {
+            title: "Card Title 5",
+            text: "Some quick example",
+            button: "Go somewhere",
+            image: "https://picsum.photos/200/100/?random",
+        },
+    ];
 
     public isFetching = false;
 
@@ -28,7 +118,6 @@ export default class Product extends Vue {
      * Get all products.
      */
     public retrieveAllProducts(): void {
-        debugger;
         this.isFetching = true;
         this.productService()
             .retrieve()
