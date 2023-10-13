@@ -9,6 +9,11 @@ export interface IProduct {
     category?: ICategory | null;
 }
 
+export interface IProductResponseResult {
+    count?: number;
+    products?: IProduct[];
+}
+
 export class Product implements IProduct {
     constructor(
         public id?: number,

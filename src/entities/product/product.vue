@@ -2,14 +2,17 @@
   <b-container class="bv-example-row">
     <b-row class="mb-3 mt-3">
       <b-col>
-        <select class="form-control">
-          <option>Select a Category</option>
-          <option
-              v-for="category in categories"
-              :key="category.value"
-          >
-            {{ category.text }}
-          </option>
+        <!--        <select class="form-control"  v-model="filterByCategory">-->
+        <!--          <option>Filter for Category</option>-->
+        <!--          <option-->
+        <!--              v-for="category in categories"-->
+        <!--              :key="category.id">-->
+        <!--            {{ category.name }}-->
+        <!--          </option>-->
+        <!--        </select>-->
+        <select class="form-control" v-model="selectedCategory" @change="onCategoryChange">
+          <option :value="null" selected>Filter for Category</option>
+          <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
         </select>
       </b-col>
       <b-col></b-col>
@@ -22,10 +25,10 @@
       <b-col>
         <b-card-group deck>
           <b-row>
-            <template v-for="(card, index) in cardsData">
+            <template v-for="(card, index) in products">
               <b-col sm="6" md="4" lg="3" xl="3" class="mb-3">
-                <b-card :title="card.title" :img-src="card.image" :img-alt="card.title" img-top>
-                  <b-card-text>{{ card.text }}</b-card-text>
+                <b-card :img-src="card.imageURL" img-top>
+                  <b-card-text>{{ card.name }}</b-card-text>
                   <template #footer>
                     <small class="text-muted">Last updated 3 mins ago</small>
                   </template>
@@ -35,17 +38,20 @@
           </b-row>
         </b-card-group>
 
-        <b-pagination v-model="currentPage" :total-rows="cardsData.length" :per-page="cardsPerPage"
-                      align="center"></b-pagination>
+        <b-pagination
+            v-model="currentPage"
+            :total-rows="totalItems"
+            :per-page="itemsPerPage"
+            v-on:change="navigateToPage($event)"
+            align="center">
+        </b-pagination>
 
       </b-col>
     </b-row>
-    <div id="footer" class="footer">
-      <p>This is your footer</p>
-    </div>
+    <!--    <div id="footer" class="footer">-->
+    <!--      <p>This is your footer</p>-->
+    <!--    </div>-->
   </b-container>
-
-
 </template>
 
 <style scoped>

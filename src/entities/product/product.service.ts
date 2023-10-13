@@ -1,9 +1,20 @@
 import axios from 'axios';
 import type { IProduct } from "@/shared/model/product.model";
+import { ApplicationConfigService } from "@/shared/service/application-config.service";
+import UIHelperService from "@/shared/service/uihelper.service";
 
+const uiHelperService = new UIHelperService();
 
-const baseApiUrl = "http://localhost:8080/api/products";
+let baseApiUrl: string = '';
 export default class ProductService {
+
+    private applicationConfigService: ApplicationConfigService;
+
+    constructor(applicationConfigService: ApplicationConfigService) {
+        this.applicationConfigService = applicationConfigService;
+        baseApiUrl = this.applicationConfigService.getEndpointFor('api/products');
+    }
+
     /**
      * Find a product by id
      * @param id
@@ -24,10 +35,12 @@ export default class ProductService {
     /**
      * Retrieve all products
      */
-    public retrieve(): Promise<any> {
+    public retrieve(req?: any): Promise<any> {
+        const query = uiHelperService.createRequestOptionMultipleWithoutNull(req);
+        const url = baseApiUrl + '?' + query;
         return new Promise<any>((resolve, reject) => {
             axios
-                .get(baseApiUrl)
+                .get(url)
                 .then(res => {
                     resolve(res);
                 })
