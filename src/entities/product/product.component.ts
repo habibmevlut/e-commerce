@@ -12,10 +12,8 @@ import CategoryService from "@/entities/category/category.service";
     mixins: [Vue2Filters.mixin],
     data() {
         return {
-            enabled: true,
             itemsPerPage: ITEMS_PER_PAGE,
             selectedCategory: null,
-            dragging: false,
             drag: false,
         };
     },
@@ -36,6 +34,8 @@ export default class Product extends Vue {
     itemsPerPage: number = ITEMS_PER_PAGE;
     currentView: string = "card";
     private removeId: number | null = null;
+    public addCartButtonVisible: boolean = false;
+    public isPriceEditing: boolean = false;
 
     cart: Array<IProduct> = [];
 
@@ -62,6 +62,7 @@ export default class Product extends Vue {
         this.productService().basketItemsCount += 1;
         console.log(this.productService().getTotalCountOfProducts());
         product.addedToCart = true;
+        product.isEditingPrice = false;
         product.defaultQuantity = 1;
     }
 
@@ -83,6 +84,10 @@ export default class Product extends Vue {
         this.currentView = this.currentView === "card" ? "list" : "card";
     }
 
+    priceChanged() {
+        this.isPriceEditing = true;
+    }
+
     /**
      * Get all products.
      */
@@ -99,9 +104,17 @@ export default class Product extends Vue {
             })
             .then(
                 (res: { data: IProductResponseResult; }) => {
-                    this.products = res.data.products;
-                    this.totalItems = res.data.count;
-                    this.isFetching = false;
+                    if (res.data.products) {
+                        this.products = res.data.products.map((product) => ({
+                            ...product,
+                            isEditingPrice: false,
+                            addedToCart: false,
+                        }));
+                        this.totalItems = res.data.count;
+                        this.isFetching = false;
+                    } else {
+                        this.products = [];
+                    }
                 },
                 (err: { response: any; }) => {
                     this.isFetching = false;
@@ -119,6 +132,32 @@ export default class Product extends Vue {
             });
     }
 
+    toggleEditPrice(product: IProduct) {
+        product.isEditingPrice = !product.isEditingPrice;
+        product.addedToCart = false;
+        this.addCartButtonVisible = !this.addCartButtonVisible;
+    }
+
+    updatePrice(product: IProduct) {
+        if (product.price !== undefined) {
+            this.productService()
+                .update(product)
+                .then(param => {
+                    this.retrieveAllProducts();
+                    const message = 'A Product is updated with identifier ' + param.id + ' .';
+                    return (this.$root as any).$bvToast.toast(message.toString(), {
+                        toaster: 'b-toaster-top-center',
+                        title: 'Info',
+                        variant: 'info',
+                        solid: true,
+                        autoHideDelay: 5000,
+                    });
+                })
+                .catch(error => {
+                    this.alertService().showHttpError(this, error.response);
+                });
+        }
+    }
 
     public prepareRemove(instance: IProduct): void {
         if (!instance.id) return;

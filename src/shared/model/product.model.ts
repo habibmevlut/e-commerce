@@ -6,6 +6,7 @@ export interface IProduct {
     price?: number | null;
     defaultQuantity?: number | null;
     addedToCart?: boolean | null;
+    isEditingPrice?: boolean | null;
     description?: string | null;
     imageURL?: string | null;
     category?: ICategory | null;

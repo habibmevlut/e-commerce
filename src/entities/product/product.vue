@@ -45,11 +45,23 @@
                   <b-col sm="6" md="4" lg="3" xl="3" class="mb-3">
                     <b-card :img-src="product.imageURL" img-top>
                       <b-card-text>{{ product.name }}</b-card-text>
-                      <b-card-text class="text-muted product-price">Price: ${{ product.price }}</b-card-text>
-                      <div v-if="!product.addedToCart">
-                        <b-button variant="primary" @click="addToCart(product)" lg="4" class="pl-4 pr-4">Add to Cart
+
+                      <b-card-text v-if="!product.isEditingPrice" class="text-muted product-price">Price:
+                        ${{ product.price }}
+                      </b-card-text>
+
+                      <div class="d-flex align-items-center mb-3" v-if="product.isEditingPrice">
+                        <input type="number" v-model="product.price" class="form-control" min="1" v-on:change="priceChanged()">
+                        <b-button variant="success" @click="updatePrice(product)" :disabled="!isPriceEditing">
+                          <b-icon icon="check-circle"></b-icon>
                         </b-button>
                       </div>
+
+                      <div v-if="!product.addedToCart">
+                        <b-button variant="primary" @click="addToCart(product)" lg="4" class="pl-4 pr-4" :disabled="product.isEditingPrice">Add to Cart
+                        </b-button>
+                      </div>
+
                       <div v-else>
                         <div class="d-flex align-items-center">
                           <b-button variant="primary" @click="decreaseQuantity(product)">-</b-button>
@@ -58,6 +70,13 @@
                           <b-button variant="primary" @click="increaseQuantity(product)">+</b-button>
                         </div>
                       </div>
+
+                      <b-card-body>
+                        <a href="#" class="card-link" @click="toggleEditPrice(product)" v-if="!product.isEditingPrice">Edit
+                          Price</a>
+                        <a href="#" class="card-link" @click="toggleEditPrice(product)" v-if="product.isEditingPrice">Cancel
+                          Edit Price</a>
+                      </b-card-body>
                     </b-card>
                   </b-col>
                 </template>
