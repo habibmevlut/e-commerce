@@ -77,6 +77,9 @@ export default class Product extends Vue {
     decreaseQuantity(product: IProduct) {
         if (product.defaultQuantity && product.defaultQuantity > 1) {
             product.defaultQuantity--;
+        } else {
+            product.defaultQuantity = 0;
+            product.addedToCart = false;
         }
     }
 
