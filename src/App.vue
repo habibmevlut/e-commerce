@@ -29,6 +29,11 @@
     </b-navbar>
 
     <router-view/>
+
+<!--    <div id="footer" class="footer">-->
+<!--      <p>Powered by <a href="https://www.linkedin.com/in/habib-mevl%C3%BCt-085aab176/" target="_blank"-->
+<!--                       rel="noopener noreferrer">Habib Mevlüt</a></p>-->
+<!--    </div>-->
   </div>
 </template>
 <script>
@@ -57,5 +62,22 @@ export default {
 
 a {
   color: #42b983;
+}
+
+.footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.125);
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+.footer a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
 }
 </style>

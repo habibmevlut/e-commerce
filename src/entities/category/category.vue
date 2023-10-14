@@ -22,45 +22,90 @@
       <span>No categories found</span>
     </div>
     <div class="table-responsive" v-if="categories && categories.length > 0 && !isFetching">
-      <table class="table table-striped" aria-describedby="categories">
-        <thead>
-        <tr>
-          <th scope="row"><span>ID</span></th>
-          <th scope="row"><span>Name</span></th>
-          <th scope="row"><span>Code</span></th>
-          <th scope="row"><span>Description</span></th>
-          <th scope="row"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="category in categories" :key="category.id" data-cy="entityTable">
-          <td> {{ category.id }}</td>
-          <td>{{ category.name }}</td>
-          <td>{{ category.code }}</td>
-          <td>{{ category.description }}</td>
-          <td class="text-right">
-            <div class="btn-group">
-              <router-link :to="{ name: 'CategoryEdit', params: { categoryId: category.id } }" custom
-                           v-slot="{ navigate }">
-                <b-button
-                    v-on:click="navigate"
-                    variant="outline-primary">
-                  <b-icon icon="pencil"></b-icon>
-                </b-button>
-              </router-link>
-              &nbsp;
-              <b-button
-                  v-on:click="prepareRemove(category)"
-                  variant="outline-danger"
-                  v-b-modal.removeEntity>
-                <b-icon icon="trash"></b-icon>
-              </b-button>
+<!--      <table class="table table-striped" aria-describedby="categories">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--          <th scope="row"><span>ID</span></th>-->
+<!--          <th scope="row"><span>Name</span></th>-->
+<!--          <th scope="row"><span>Code</span></th>-->
+<!--          <th scope="row"><span>Description</span></th>-->
+<!--          <th scope="row"></th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        <tr v-for="category in categories" :key="category.id" data-cy="entityTable">-->
+<!--          <td> {{ category.id }}</td>-->
+<!--          <td>{{ category.name }}</td>-->
+<!--          <td>{{ category.code }}</td>-->
+<!--          <td>{{ category.description }}</td>-->
+<!--          <td class="text-right">-->
+<!--            <div class="btn-group">-->
+<!--              <router-link :to="{ name: 'CategoryEdit', params: { categoryId: category.id } }" custom-->
+<!--                           v-slot="{ navigate }">-->
+<!--                <b-button-->
+<!--                    v-on:click="navigate"-->
+<!--                    variant="outline-primary">-->
+<!--                  <b-icon icon="pencil"></b-icon>-->
+<!--                </b-button>-->
+<!--              </router-link>-->
+<!--              &nbsp;-->
+<!--              <b-button-->
+<!--                  v-on:click="prepareRemove(category)"-->
+<!--                  variant="outline-danger"-->
+<!--                  v-b-modal.removeEntity>-->
+<!--                <b-icon icon="trash"></b-icon>-->
+<!--              </b-button>-->
 
-            </div>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+<!--            </div>-->
+<!--          </td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--      </table>-->
+
+      <b-table-simple class="table-item">
+        <b-thead>
+          <b-th>Id</b-th>
+          <b-th>Name</b-th>
+          <b-th>Code</b-th>
+          <b-th>Description</b-th>
+          <b-th></b-th>
+        </b-thead>
+        <!-- Draggable rows -->
+        <draggable
+            :class="{ [`cursor-grabbing`]: drag }"
+            v-model="categories"
+            group="items"
+            @start="drag = true"
+            @end="drag = false"
+            tag="tbody">
+          <b-tr v-for="category in categories" :key="category.id" class="item-row">
+            <b-td>{{ category.id }}</b-td>
+            <b-td>{{ category.name }}</b-td>
+            <b-td>{{ category.code }}</b-td>
+            <b-td>{{ category.description }}</b-td>
+            <b-td class="text-right">
+              <div class="btn-group">
+                <router-link :to="{ name: 'CategoryEdit', params: { categoryId: category.id } }" custom
+                             v-slot="{ navigate }">
+                  <b-button
+                      v-on:click="navigate"
+                      variant="outline-primary">
+                    <b-icon icon="pencil"></b-icon>
+                  </b-button>
+                </router-link>
+                &nbsp;
+                <b-button
+                    v-on:click="prepareRemove(category)"
+                    variant="outline-danger"
+                    v-b-modal.removeEntity>
+                  <b-icon icon="trash"></b-icon>
+                </b-button>
+
+              </div>
+            </b-td>
+          </b-tr>
+        </draggable>
+      </b-table-simple>
 
       <b-pagination
           v-model="currentPage"
@@ -102,6 +147,21 @@
   display: flex;
   justify-content: center;
   margin: 252px
+}
+
+.table-item {
+  //margin: 0.5rem;
+}
+
+
+.item-row {
+  cursor: pointer;
+}
+
+.items pre {
+  color: #fff;
+  width: 150px;
+  margin: auto;
 }
 </style>
 

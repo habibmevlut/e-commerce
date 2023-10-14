@@ -57,7 +57,7 @@ export default class ProductService {
      * Delete a product by id
      * @param id
      */
-    public delete(id: number): Promise<any> {
+    public delete(id: number | null): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             axios
                 .delete(`${baseApiUrl}/${id}`)

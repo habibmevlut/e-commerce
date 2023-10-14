@@ -16,11 +16,12 @@ import CategoryService from "@/entities/category/category.service";
             itemsPerPage: ITEMS_PER_PAGE,
             selectedCategory: null,
             dragging: false,
+            drag: false,
         };
     },
     components: {
         draggable: () => import('vuedraggable')
-    },
+    }
 })
 export default class Product extends Vue {
 
@@ -33,6 +34,8 @@ export default class Product extends Vue {
     totalItems: number | undefined = 0;
     currentPage: number | null = 1;
     itemsPerPage: number = ITEMS_PER_PAGE;
+    currentView: string = "card";
+    private removeId: number | null = null;
 
     cart: Array<IProduct> = [];
 
@@ -76,6 +79,10 @@ export default class Product extends Vue {
         }
     }
 
+    toggleView() {
+        this.currentView = this.currentView === "card" ? "list" : "card";
+    }
+
     /**
      * Get all products.
      */
@@ -110,6 +117,40 @@ export default class Product extends Vue {
             .then(res => {
                 this.categories = res.data.categories;
             });
+    }
+
+
+    public prepareRemove(instance: IProduct): void {
+        if (!instance.id) return;
+        this.removeId = instance.id;
+        if (<any>this.$refs.removeEntity) {
+            (<any>this.$refs.removeEntity).show();
+        }
+    }
+
+    public removeProduct(): void {
+        this.productService()
+            .delete(this.removeId)
+            .then(() => {
+                const message = 'A Product is deleted with identifier ' + this.removeId + ' .';
+                this.$bvToast.toast(message.toString(), {
+                    toaster: 'b-toaster-top-center',
+                    title: 'Info',
+                    variant: 'danger',
+                    solid: true,
+                    autoHideDelay: 5000,
+                });
+                this.removeId = null;
+                this.retrieveAllProducts();
+                this.closeDialog();
+            })
+            .catch(error => {
+                this.alertService().showHttpError(this, error.response);
+            });
+    }
+
+    public closeDialog(): void {
+        (<any>this.$refs.removeEntity).hide();
     }
 
 }

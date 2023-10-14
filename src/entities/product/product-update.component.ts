@@ -94,7 +94,6 @@ export default class ProductUpdate extends Vue {
         this.categoryService()
             .retrieve()
             .then(res => {
-                debugger;
                 this.categories = res.data.categories;
             });
     }

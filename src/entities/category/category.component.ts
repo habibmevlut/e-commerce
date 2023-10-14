@@ -12,7 +12,11 @@ import { ICategory, ICategoryResponseResult } from "@/shared/model/category.mode
     data() {
         return {
             itemsPerPage: ITEMS_PER_PAGE,
+            drag: false,
         };
+    },
+    components: {
+        draggable: () => import('vuedraggable')
     }
 })
 export default class Category extends Vue {
@@ -23,7 +27,7 @@ export default class Category extends Vue {
     public isFetching = false;
     totalItems: number | undefined = 0;
     currentPage: number | null = 1;
-    itemsPerPage: number = ITEMS_PER_PAGE;
+    itemsPerPage: number = 20;
     private removeId: number | null = null;
 
     public mounted(): void {
