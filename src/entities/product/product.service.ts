@@ -9,6 +9,9 @@ let baseApiUrl: string = '';
 export default class ProductService {
 
     private applicationConfigService: ApplicationConfigService;
+    public basketItemsCount: number = 0;
+    public basketItems: IProduct[] = [];
+
 
     constructor(applicationConfigService: ApplicationConfigService) {
         this.applicationConfigService = applicationConfigService;
@@ -116,5 +119,9 @@ export default class ProductService {
                     reject(err);
                 });
         });
+    }
+
+    getTotalCountOfProducts(): number {
+        return this.basketItemsCount;
     }
 }

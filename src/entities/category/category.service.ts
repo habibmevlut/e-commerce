@@ -1,6 +1,9 @@
 import { ApplicationConfigService } from "@/shared/service/application-config.service";
 import { ICategory } from "@/shared/model/category.model";
 import axios from "axios";
+import UIHelperService from "@/shared/service/uihelper.service";
+
+const uiHelperService = new UIHelperService();
 
 let baseApiUrl: string = '';
 export default class CategoryService {
@@ -30,10 +33,12 @@ export default class CategoryService {
     /**
      * Retrieve all categories
      */
-    public retrieve(): Promise<any> {
+    public retrieve(req?: any): Promise<any> {
+        const query = uiHelperService.createRequestOptionMultipleWithoutNull(req);
+        const url = baseApiUrl + '?' + query;
         return new Promise<any>((resolve, reject) => {
             axios
-                .get(baseApiUrl)
+                .get(url)
                 .then(res => {
                     resolve(res);
                 })
@@ -46,7 +51,7 @@ export default class CategoryService {
     /**
      * Delete a category by id
      */
-    public delete(id: number): Promise<any> {
+    public delete(id: number | null): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             axios
                 .delete(`${baseApiUrl}/${id}`)

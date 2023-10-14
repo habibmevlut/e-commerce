@@ -14,7 +14,7 @@ export default class AlertService {
     public showHttpError(instance: Vue, httpErrorResponse: any) {
         switch (httpErrorResponse.status) {
             case 0:
-                this.showError(instance, 'error.server.not.reachable');
+                this.showError(instance, 'Unable to reach the server. Please check your internet connection.');
                 break;
 
             case 400: {
@@ -39,7 +39,7 @@ export default class AlertService {
             }
 
             case 404:
-                this.showError(instance, 'error.http.404');
+                this.showError(instance, 'The endpoint does not exist.');
                 break;
 
             default:

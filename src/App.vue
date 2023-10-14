@@ -20,7 +20,7 @@
             </b-nav-item>
 
             <b-button variant="primary" size="md">
-              <b-badge variant="light">4</b-badge>
+              <b-badge variant="light">{{ totalCountOfProducts }}</b-badge>
               My Basket
             </b-button>
           </b-navbar-nav>
@@ -31,6 +31,21 @@
     <router-view/>
   </div>
 </template>
+<script>
+export default {
+  name: 'App',
+  components: {},
+  data() {
+    return {
+      totalCountOfProducts: 0,
+    };
+  },
+  methods: {},
+  computed: {},
+  mounted() {
+  },
+};
+</script>
 <style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

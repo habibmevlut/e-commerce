@@ -2,10 +2,16 @@ import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import entities from "@/router/entities";
+import { Component } from "vue-property-decorator";
+
+Component.registerHooks([
+    'beforeRouteEnter',
+    'beforeRouteLeave',
+    'beforeRouteUpdate', // for vue-router 2.2+
+]);
 
 Vue.use(VueRouter);
 
-// const Product = () => import('@/entities/product/product.component.vue');
 
 const routes: Array<RouteConfig> = [
     {
@@ -14,18 +20,6 @@ const routes: Array<RouteConfig> = [
         component: HomeView,
     },
     entities,
-    // {
-    //     path: "/about",
-    //     name: "about",
-    //     component: () =>
-    //         import("../views/AboutView.vue"),
-    // },
-    // {
-    //     path: "/product",
-    //     name: "product",
-    //     component: () =>
-    //         import("../views/ProductView.vue"),
-    // },
 ];
 
 const router = new VueRouter({
