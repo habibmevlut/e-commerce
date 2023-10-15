@@ -11,11 +11,16 @@
         <input type="text" class="form-control" id="id" name="id" v-model="product.id" readonly/>
       </div>
 
+      <b-form-group
+          label="Title"
+          label-for="input-title">
+        <b-form-input id="input-title" v-model="product.title" trim></b-form-input>
+      </b-form-group>
 
       <b-form-group
-          label="Name"
-          label-for="input-name">
-        <b-form-input id="input-name" v-model="product.name" trim></b-form-input>
+          label="Quantity"
+          label-for="input-quantity">
+        <b-form-input id="input-quantity" v-model="product.quantity" trim type="number"></b-form-input>
       </b-form-group>
 
       <b-form-group
@@ -28,13 +33,13 @@
       <b-form-group
           label="ImageURL"
           label-for="input-imageURL">
-        <b-form-input id="input-imageURL" v-model="product.imageURL" trim></b-form-input>
+        <b-form-input id="input-imageURL" v-model="product.image" trim></b-form-input>
       </b-form-group>
 
       <div class="form-group">
         <label class="form-control-label">Category</label>
         <select class="form-control" id="country-category" data-cy="category" name="category"
-                v-model="product.category">
+                v-model="product.categoryId">
           <option v-bind:value="null"></option>
           <option
               v-for="category in categories"

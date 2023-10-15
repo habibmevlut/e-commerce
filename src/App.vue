@@ -1,83 +1,65 @@
 <template>
-  <div id="app">
-    <b-navbar toggleable="xl" type="dark" variant="dark">
-      <b-navbar-brand href="#">E-Commerce</b-navbar-brand>
+  <div class="d-flex flex-column sticky-footer-wrapper">
+    <main class="flex-fill">
+      <app-header></app-header>
+      <message-component></message-component>
+      <div class="container mt-3">
+        <div class="row">
+          <div class="col-md-12">
+            <router-view></router-view>
+          </div>
+        </div>
+      </div>
+    </main>
 
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-      <b-collapse id="nav-collapse" is-nav>
-        <!-- Right aligned nav items -->
-        <b-navbar-nav class="ml-auto">
-          <b-navbar-nav>
-            <b-nav-item>
-              <router-link to="/">Home</router-link>
-            </b-nav-item>
-            <b-nav-item>
-              <router-link to="/product">Products</router-link>
-            </b-nav-item>
-            <b-nav-item>
-              <router-link to="/category">Category</router-link>
-            </b-nav-item>
-
-            <b-button variant="primary" size="md">
-              <b-badge variant="light">{{ totalCountOfProducts }}</b-badge>
-              My Basket
-            </b-button>
-          </b-navbar-nav>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
-
-    <router-view/>
-
-<!--    <div id="footer" class="footer">-->
-<!--      <p>Powered by <a href="https://www.linkedin.com/in/habib-mevl%C3%BCt-085aab176/" target="_blank"-->
-<!--                       rel="noopener noreferrer">Habib Mevlüt</a></p>-->
-<!--    </div>-->
+    <footer class="navbar-default navbar-bottom navbar-dark bg-dark">
+      <div class="container-fluid">
+        <p class="text-center nav-bar mb-0">Checkout repository at <a
+            href="https://github.com/ittus/vuejs-firebase-shopping-cart" target="_blank">
+          https://github.com/ittus/vuejs-firebase-shopping-cart
+        </a></p>
+      </div>
+    </footer>
   </div>
+
 </template>
+
 <script>
+import AppHeader from "@/components/Header.vue";
+import MessageComponent from "@/components/common/MessageComponent.vue";
+
 export default {
   name: 'App',
-  components: {},
-  data() {
-    return {
-      totalCountOfProducts: 0,
-    };
-  },
-  methods: {},
-  computed: {},
-  mounted() {
-  },
+  components: {MessageComponent, AppHeader},
 };
 </script>
 <style scoped>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+body, .sticky-footer-wrapper {
+  min-height: 100vh;
 }
 
-a {
-  color: #42b983;
+.flex-fill {
+  flex: 1 1 auto;
 }
 
-.footer {
-  border-top: 1px solid rgba(0, 0, 0, 0.125);
-  background-color: #333;
-  color: #fff;
-  padding: 20px;
-  text-align: center;
+footer {
+  height: 50px;
+  color: #666;
+  padding: 10px 0 10px 0;
+  font-size: 85%;
 }
 
-.footer a {
-  color: #fff;
-  text-decoration: none;
+footer a {
+  color: #999;
 }
 
-.footer a:hover {
-  text-decoration: underline;
+footer a:hover {
+  color: #efefef;
+}
+
+@media (max-width: 576px) {
+  footer {
+    height: 50px;
+  }
 }
 </style>

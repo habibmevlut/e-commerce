@@ -17,12 +17,11 @@
             <span>Add New </span>
           </b-button>
         </router-link>
-
         &nbsp;
         <b-button
             @click="toggleView"
             variant="outline-primary">
-          <b-icon icon="list"></b-icon>
+          <b-icon :icon="currentView === 'card' ? 'list' : 'grid'"></b-icon>
         </b-button>
 
       </b-col>
@@ -30,108 +29,22 @@
 
     <b-row v-if="products && products.length > 0 && !isFetching">
       <b-col>
-        <div v-if="currentView === 'card'">
-          <b-card-group deck>
-            <b-row>
-              <!-- Draggable rows -->
-              <draggable
-                  :class="{ [`cursor-grabbing`]: drag }"
-                  v-model="products"
-                  group="items"
-                  @start="drag = true"
-                  @end="drag = false"
-                  tag="b-card-group">
-                <template v-for="(product, index) in products">
-                  <b-col sm="6" md="4" lg="3" xl="3" class="mb-3">
-                    <b-card :img-src="product.imageURL" img-top>
-                      <b-card-text>{{ product.name }}</b-card-text>
-
-                      <b-card-text v-if="!product.isEditingPrice" class="text-muted product-price">Price:
-                        ${{ product.price }}
-                      </b-card-text>
-
-                      <div class="d-flex align-items-center mb-3" v-if="product.isEditingPrice">
-                        <input type="number" v-model="product.price" class="form-control" min="1" v-on:change="priceChanged()">
-                        <b-button variant="success" @click="updatePrice(product)" :disabled="!isPriceEditing">
-                          <b-icon icon="check-circle"></b-icon>
-                        </b-button>
-                      </div>
-
-                      <div v-if="!product.addedToCart">
-                        <b-button variant="primary" @click="addToCart(product)" lg="4" class="pl-4 pr-4" :disabled="product.isEditingPrice">Add to Cart
-                        </b-button>
-                      </div>
-
-                      <div v-else>
-                        <div class="d-flex align-items-center">
-                          <b-button variant="primary" @click="decreaseQuantity(product)">-</b-button>
-                          <input type="text" v-model="product.defaultQuantity" class="form-control text-center" min="1"
-                                 readonly>
-                          <b-button variant="primary" @click="increaseQuantity(product)">+</b-button>
-                        </div>
-                      </div>
-
-                      <b-card-body>
-                        <a href="#" class="card-link" @click="toggleEditPrice(product)" v-if="!product.isEditingPrice">Edit
-                          Price</a>
-                        <a href="#" class="card-link" @click="toggleEditPrice(product)" v-if="product.isEditingPrice">Cancel
-                          Edit Price</a>
-                      </b-card-body>
-                    </b-card>
-                  </b-col>
-                </template>
-
-              </draggable>
-            </b-row>
-          </b-card-group>
-        </div>
-        <div v-else>
-          <b-table-simple class="table-item">
-            <b-thead>
-              <b-th>Id</b-th>
-              <b-th>Name</b-th>
-              <b-th>Price</b-th>
-              <b-th>Description</b-th>
-              <b-th></b-th>
-            </b-thead>
-            <!-- Draggable rows -->
+        <b-card-group deck>
+          <b-row>
             <draggable
                 :class="{ [`cursor-grabbing`]: drag }"
                 v-model="products"
                 group="items"
                 @start="drag = true"
                 @end="drag = false"
-                tag="tbody">
-              <b-tr v-for="product in products" :key="product.id" class="item-row">
-                <b-td>{{ product.id }}</b-td>
-                <b-td>{{ product.name }}</b-td>
-                <b-td>{{ product.price }}</b-td>
-                <b-td>{{ product.description }}</b-td>
-                <b-td>
-                  <div class="btn-group">
-                    <router-link :to="{ name: 'ProductEdit', params: { productId: product.id } }" custom
-                                 v-slot="{ navigate }">
-                      <b-button
-                          v-on:click="navigate"
-                          variant="outline-primary">
-                        <b-icon icon="pencil"></b-icon>
-                      </b-button>
-                    </router-link>
-                    &nbsp;
-                    <b-button
-                        v-on:click="prepareRemove(product)"
-                        variant="outline-danger"
-                        v-b-modal.removeEntity>
-                      <b-icon icon="trash"></b-icon>
-                    </b-button>
-
-                  </div>
-                </b-td>
-              </b-tr>
+                tag="b-card-group">
+              <app-product-item v-for="prod in products" :item="prod" :key="prod.id" :displayList="displayList"
+                                @updatePrice="updatePrice(prod)"
+                                @removeProduct="prepareRemove(prod)">
+              </app-product-item>
             </draggable>
-          </b-table-simple>
-        </div>
-
+          </b-row>
+        </b-card-group>
         <b-pagination
             v-model="currentPage"
             :total-rows="totalItems"
@@ -177,26 +90,12 @@
 </template>
 
 <style scoped>
-.product-price {
-  font-weight: bold;
-  background-color: #FFDF2F;
-  padding: 8px;
-}
 
 .spinner-div {
   position: relative;
   display: flex;
   justify-content: center;
   margin-top: 300px;
-}
-
-.table-item {
-  margin: 0.5rem;
-}
-
-
-.item-row {
-  cursor: pointer;
 }
 
 .items pre {

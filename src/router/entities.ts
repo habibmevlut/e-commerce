@@ -4,8 +4,12 @@ const Product = () => import('@/entities/product/product.vue');
 
 const ProductUpdate = () => import('@/entities/product/product-update.vue');
 
+const ProductDetails = () => import('@/components/ProductDetails.vue');
+
 const Category = () => import('@/entities/category/category.vue');
 const CategoryUpdate = () => import('@/entities/category/category-update.vue');
+
+const ShoppingCart = () => import('@/components/ShoppingCart.vue');
 
 
 export default {
@@ -28,6 +32,12 @@ export default {
             component: ProductUpdate,
         },
         {
+            path: '/product/:productId/detail',
+            name: 'ProductDetail',
+            component: ProductDetails
+        },
+
+        {
             path: 'category',
             name: 'Category',
             component: Category,
@@ -42,5 +52,10 @@ export default {
             name: 'CategoryEdit',
             component: CategoryUpdate,
         },
+        {
+            path: '/cart',
+            component: ShoppingCart,
+            name: 'ShoppingCart'
+        }
     ],
 };

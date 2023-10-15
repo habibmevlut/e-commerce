@@ -2,10 +2,11 @@ import { Component, Inject, Vue } from 'vue-property-decorator';
 import Vue2Filters from "vue2-filters";
 import ProductService from "@/entities/product/product.service";
 import AlertService from "@/shared/alert/alert.service";
-import { IProduct, IProductResponseResult } from "@/shared/model/product.model";
+import { IProduct, IProductResponseResult, Product } from "@/shared/model/product.model";
 import { ITEMS_PER_PAGE } from "@/app.constants";
 import { ICategory } from "@/shared/model/category.model";
 import CategoryService from "@/entities/category/category.service";
+import AppProductItem from "@/components/product/ProductItem.vue";
 
 
 @Component({
@@ -18,10 +19,11 @@ import CategoryService from "@/entities/category/category.service";
         };
     },
     components: {
+        AppProductItem,
         draggable: () => import('vuedraggable')
     }
 })
-export default class Product extends Vue {
+export default class ProductComponent extends Vue {
 
     @Inject('productService') private productService: () => ProductService;
     @Inject('categoryService') private categoryService: () => CategoryService;
@@ -34,11 +36,8 @@ export default class Product extends Vue {
     itemsPerPage: number = ITEMS_PER_PAGE;
     currentView: string = "card";
     private removeId: number | null = null;
-    public addCartButtonVisible: boolean = false;
     public isPriceEditing: boolean = false;
-
-    cart: Array<IProduct> = [];
-
+    public displayList: boolean = false;
     public selectedCategory: string | null = null;
 
     public onCategoryChange() {
@@ -56,40 +55,11 @@ export default class Product extends Vue {
         this.retrieveAllProducts();
     }
 
-
-    addToCart(product: IProduct) {
-        this.productService().basketItems.push(product);
-        this.productService().basketItemsCount += 1;
-        console.log(this.productService().getTotalCountOfProducts());
-        product.addedToCart = true;
-        product.isEditingPrice = false;
-        product.defaultQuantity = 1;
-    }
-
-    increaseQuantity(product: IProduct) {
-        product.defaultQuantity ? product.defaultQuantity++ : product.defaultQuantity = 1;
-        this.productService().basketItems.push(product);
-        this.productService().basketItemsCount = ++this.productService().basketItems.length;
-        console.log(this.productService().basketItems);
-        console.log(this.productService().basketItemsCount);
-    }
-
-    decreaseQuantity(product: IProduct) {
-        if (product.defaultQuantity && product.defaultQuantity > 1) {
-            product.defaultQuantity--;
-        } else {
-            product.defaultQuantity = 0;
-            product.addedToCart = false;
-        }
-    }
-
     toggleView() {
         this.currentView = this.currentView === "card" ? "list" : "card";
+        this.displayList = this.currentView === "list";
     }
 
-    priceChanged() {
-        this.isPriceEditing = true;
-    }
 
     /**
      * Get all products.
@@ -135,13 +105,9 @@ export default class Product extends Vue {
             });
     }
 
-    toggleEditPrice(product: IProduct) {
-        product.isEditingPrice = !product.isEditingPrice;
-        product.addedToCart = false;
-        this.addCartButtonVisible = !this.addCartButtonVisible;
-    }
-
-    updatePrice(product: IProduct) {
+    updatePrice(product: any) {
+        delete product.isEditingPrice;
+        delete product.addedToCart;
         if (product.price !== undefined) {
             this.productService()
                 .update(product)
@@ -159,10 +125,13 @@ export default class Product extends Vue {
                 .catch(error => {
                     this.alertService().showHttpError(this, error.response);
                 });
+        } else {
+            this.alertService().showError(this, "Price is required");
         }
     }
 
     public prepareRemove(instance: IProduct): void {
+        debugger;
         if (!instance.id) return;
         this.removeId = instance.id;
         if (<any>this.$refs.removeEntity) {
@@ -171,6 +140,7 @@ export default class Product extends Vue {
     }
 
     public removeProduct(): void {
+        debugger;
         this.productService()
             .delete(this.removeId)
             .then(() => {
