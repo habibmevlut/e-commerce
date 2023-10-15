@@ -15,8 +15,8 @@
     <footer class="navbar-default navbar-bottom navbar-dark bg-dark">
       <div class="container-fluid">
         <p class="text-center nav-bar mb-0">Checkout repository at <a
-            href="https://github.com/ittus/vuejs-firebase-shopping-cart" target="_blank">
-          https://github.com/ittus/vuejs-firebase-shopping-cart
+            href="https://github.com/habibmevlut/e-commerce" target="_blank">
+          https://github.com/habibmevlut/e-commerce
         </a></p>
       </div>
     </footer>
