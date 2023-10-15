@@ -42,6 +42,7 @@
                 v-model="product.categoryId">
           <option v-bind:value="null"></option>
           <option
+              v-bind:value="category.id"
               v-for="category in categories"
               :key="category.id">
             {{ category.name }}
