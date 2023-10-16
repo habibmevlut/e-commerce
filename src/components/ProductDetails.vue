@@ -27,7 +27,6 @@
         </div>
       </div>
     </div>
-    <vue-json-pretty :data="product"></vue-json-pretty>
   </div>
 </template>
 
